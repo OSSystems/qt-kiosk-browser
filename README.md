@@ -1,3 +1,7 @@
+<p align="center">
+    <img align="center" src="screenshot.png" height="480px"/>
+</p>
+
 # Settings
 
 The settings file must be a JSON file.
