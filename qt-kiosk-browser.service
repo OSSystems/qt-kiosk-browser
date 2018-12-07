@@ -3,9 +3,9 @@ Description=Qt Kiosk Browser
 DefaultDependencies=no
 Conflicts=getty@tty1.service
 After=systemd-user-sessions.service easysplash-quit.service
- 
+
 [Service]
-ExecStart=/usr/bin/qt-kiosk-browser
- 
+ExecStart=/usr/bin/qt-kiosk-browser -platform eglfs /etc/qt-kiosk-browser.conf
+
 [Install]
 Alias=display-manager.service
