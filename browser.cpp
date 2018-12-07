@@ -9,6 +9,7 @@
 #include "browser.hpp"
 
 #include <QProcess>
+#include <QFile>
 
 Browser::Browser(QObject *parent): QObject(parent)
 {
@@ -16,5 +17,8 @@ Browser::Browser(QObject *parent): QObject(parent)
 
 void Browser::restart()
 {
-    QProcess::startDetached("systemctl", QStringList() << "restart" << "browser");
+    if (QFile::exists("/etc/inittab"))
+        QProcess::startDetached("/etc/init.d/qt-kiosk-browser", QStringList() << "restart");
+    else
+        QProcess::startDetached("systemctl", QStringList() << "restart" << "qt-kiosk-browser");
 }
