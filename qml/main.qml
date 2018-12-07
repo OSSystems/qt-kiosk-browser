@@ -37,6 +37,10 @@ Window {
                             restartTimer.interval = parseInt(settings["RestartTimeout"]);
                         }
 
+                        if (typeof settings["URL"] != "undefined") {
+                            webView.url = settings["URL"];
+                        }
+
                         for (var key in settings["WebEngineSettings"]) {
                             if (typeof webView.settings[key] == "undefined") {
                                 console.error("Invalid settings property: " + key);
@@ -58,7 +62,7 @@ Window {
     WebEngineView {
         id: webView
 
-        url: "http://www.qt.io"
+        url: "http://www.ossystems.com.br"
 
         anchors.fill: parent
     }
