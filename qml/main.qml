@@ -22,7 +22,7 @@ Window {
     Component.onCompleted: {
         var xhr = new XMLHttpRequest();
 
-        xhr.open("GET", "file:settings.json");
+        xhr.open("GET", "file:" + (Qt.application.arguments[1] || "settings.json"));
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.responseText.trim().length != 0) {
