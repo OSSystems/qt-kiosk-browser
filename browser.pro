@@ -4,7 +4,7 @@ QT += qml quick core gui webengine webenginewidgets
 
 CONFIG += c++11
 
-TARGET = browser
+TARGET = qt-kiosk-browser
 
 HEADERS += \
   inputeventhandler.hpp \
