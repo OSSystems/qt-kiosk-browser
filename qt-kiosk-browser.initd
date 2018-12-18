@@ -22,7 +22,7 @@ umask 022
 
 . /etc/init.d/functions
 
-export PATH="${PATH:+$PATH:}@SBINDIR@:@BASE_SBINDIR@"
+export PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
 case "$1" in
     start)
