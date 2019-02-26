@@ -100,7 +100,7 @@ Window {
     Timer {
         id: screenSaverTimer
         interval: 60000 * 20 // 20 minutes
-        running: true
+        running: interval > 0
         repeat: false
 
         onTriggered: {
@@ -115,5 +115,9 @@ Window {
         repeat: false
 
         onTriggered: Browser.restart()
+
+        function start() {
+            this.running = this.interval > 0;
+        }
     }
 }
