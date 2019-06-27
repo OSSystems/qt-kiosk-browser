@@ -104,8 +104,10 @@ Window {
         repeat: false
 
         onTriggered: {
-            screenSaver.visible = true;
-            restartTimer.start();
+            if (this.interval > 0) {
+                screenSaver.visible = true;
+                restartTimer.start();
+            }
         }
     }
 
