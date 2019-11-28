@@ -18,6 +18,7 @@ Window {
 
     visibility: Window.FullScreen
     visible: true
+    color: "black"
 
     Component.onCompleted: {
         var xhr = new XMLHttpRequest();
