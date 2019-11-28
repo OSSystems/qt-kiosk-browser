@@ -49,6 +49,10 @@ Window {
 
                             webView.settings[key] = settings["WebEngineSettings"][key];
                         }
+
+                        if (typeof settings["SplashScreen"] != "undefined") {
+                            splash.source = settings["SplashScreen"];
+                        }
                     } catch (e) {
                         console.error("Failed to parse settings file: " + e)
                     }
@@ -65,6 +69,26 @@ Window {
         url: "http://www.ossystems.com.br"
 
         anchors.fill: parent
+        visible: false
+
+        onLoadingChanged: {
+            if (loadRequest.status === WebEngineLoadRequest.LoadSucceededStatus) {
+                webView.visible = true;
+                splash.visible = false;
+            }
+        }
+    }
+
+    Image {
+        id: splash
+        anchors.fill: parent
+        visible: false
+
+        onStatusChanged: {
+            if (status === Image.Ready) {
+                visible = true;
+            }
+        }
     }
 
     InputPanel {
