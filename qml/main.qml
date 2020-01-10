@@ -8,7 +8,7 @@
 
 import QtQuick 2.0
 import QtQuick.Window 2.1
-import QtWebEngine 1.0
+import QtWebEngine 1.4
 import QtQuick.VirtualKeyboard 2.1
 
 import Browser 1.0
@@ -54,6 +54,10 @@ Window {
                         if (typeof settings["SplashScreen"] != "undefined") {
                             splash.source = settings["SplashScreen"];
                         }
+
+                        if (typeof settings["DisableContextMenu"] != "undefined") {
+                            webView.disableContextMenu = settings["DisableContextMenu"];
+                        }
                     } catch (e) {
                         console.error("Failed to parse settings file: " + e)
                     }
@@ -72,11 +76,17 @@ Window {
         anchors.fill: parent
         visible: false
 
+        property bool disableContextMenu: false
+
         onLoadingChanged: {
             if (loadRequest.status === WebEngineLoadRequest.LoadSucceededStatus) {
                 webView.visible = true;
                 splash.visible = false;
             }
+        }
+
+        onContextMenuRequested: {
+            request.accepted = disableContextMenu;
         }
     }
 
