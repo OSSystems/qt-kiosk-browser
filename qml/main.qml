@@ -22,8 +22,9 @@ Window {
 
     Component.onCompleted: {
         var xhr = new XMLHttpRequest();
-
-        xhr.open("GET", "file:" + (Qt.application.arguments[1] || "settings.json"));
+        let conf = "file:" + (Qt.application.arguments.slice(1).find(arg => !arg.startsWith("--")) || "settings.json");
+        console.log("Loading configuration from '" + conf + "'");
+        xhr.open("GET", conf);
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.responseText.trim().length != 0) {
