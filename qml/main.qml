@@ -36,7 +36,7 @@ Window {
             id: webView
             backgroundColor: "black"
 
-            url: ""http://www.ossystems.com.br"
+            url: "http://www.ossystems.com.br"
 
             anchors.fill: parent
             visible: false
