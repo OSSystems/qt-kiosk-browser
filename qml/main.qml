@@ -8,7 +8,7 @@
 
 import QtQuick 2.0
 import QtQuick.Window 2.1
-import QtWebEngine 1.2
+import QtWebEngine 1.4
 import QtQuick.VirtualKeyboard 2.1
 
 import Browser 1.0
@@ -39,6 +39,20 @@ Window {
             url: ""http://www.ossystems.com.br"
 
             anchors.fill: parent
+            visible: false
+
+            property bool disableContextMenu: false
+
+            onLoadingChanged: {
+                if (loadRequest.status === WebEngineLoadRequest.LoadSucceededStatus) {
+                    webView.visible = true;
+                    splash.visible = false;
+                }
+            }
+
+            onContextMenuRequested: {
+                request.accepted = disableContextMenu;
+            }
         }
 
         property var elementWithFocusY: 0
@@ -86,8 +100,9 @@ Window {
         Qt.inputMethod.visibleChanged.connect(adjuster.restart)
 
         var xhr = new XMLHttpRequest();
-
-        xhr.open("GET", "file:" + (Qt.application.arguments[1] || "settings.json"));
+        let conf = "file:" + (Qt.application.arguments.slice(1).find(arg => !arg.startsWith("--")) || "settings.json");
+        console.log("Loading configuration from '" + conf + "'");
+        xhr.open("GET", conf);
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.responseText.trim().length != 0) {
@@ -114,6 +129,14 @@ Window {
 
                             webView.settings[key] = settings["WebEngineSettings"][key];
                         }
+
+                        if (typeof settings["SplashScreen"] != "undefined") {
+                            splash.source = settings["SplashScreen"];
+                        }
+
+                        if (typeof settings["DisableContextMenu"] != "undefined") {
+                            webView.disableContextMenu = settings["DisableContextMenu"];
+                        }
                     } catch (e) {
                         console.error("Failed to parse settings file: " + e)
                     }
@@ -122,6 +145,18 @@ Window {
         }
 
         xhr.send();
+    }
+
+    Image {
+        id: splash
+        anchors.fill: parent
+        visible: false
+
+        onStatusChanged: {
+            if (status === Image.Ready) {
+                visible = true;
+            }
+        }
     }
 
     InputPanel {
