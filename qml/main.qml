@@ -19,8 +19,86 @@ Window {
     visibility: Window.FullScreen
     visible: true
     color: "black"
+  
+    Flickable {
+        id: flickable
+        anchors.fill: parent
+
+        width: window.width
+        height: window.height
+        contentWidth: window.width
+        contentHeight: window.height
+        boundsBehavior: Flickable.OvershootBounds
+        flickableDirection: Flickable.VerticalFlick
+        interactive: false
+
+        WebEngineView {
+            id: webView
+            backgroundColor: "black"
+
+            url: "http://www.ossystems.com.br"
+
+            anchors.fill: parent
+            visible: false
+
+            property bool disableContextMenu: false
+
+            onLoadingChanged: {
+                if (loadRequest.status === WebEngineLoadRequest.LoadSucceededStatus) {
+                    webView.visible = true;
+                    splash.visible = false;
+                }
+            }
+
+            onContextMenuRequested: {
+                request.accepted = disableContextMenu;
+            }
+        }
+
+        property var elementWithFocusY: 0
+        property var elementWithFocusHeight: 0
+
+        function adjust() {
+            if (!Qt.inputMethod.visible) {
+                flickable.contentY = 0;
+                return
+            }
+
+            // get the height of the element with focus, needs to be in a dedicated JS call as it can only return plain data
+            webView.runJavaScript("document.activeElement.getBoundingClientRect().height;",
+                function(result) {
+                    // store the height
+                    flickable.elementWithFocusHeight = result;
+                }
+            )
+
+            // get the y position of the element with focus, needs to be in a dedicated JS call as it can only return plain data
+            webView.runJavaScript("document.activeElement.getBoundingClientRect().y;",
+                function(result) {
+                    // store the y position
+                    flickable.elementWithFocusY = result;
+                    // take some margin to prevent placing directly against the top
+                    var elementWithFocusYMinusMargin = flickable.elementWithFocusY - 15
+                    //take some margin to prevent placing against the input panel at the bottom
+                    var elementWithFocusHeightPlusMargin = flickable.elementWithFocusHeight + 15
+                    // check if element will be covered by input panel
+                    if ((flickable.elementWithFocusY + elementWithFocusHeightPlusMargin) > (webView.height - inputPanel.height)) {
+                        flickable.contentY = elementWithFocusYMinusMargin
+                    }
+                }
+            )
+        }
+    }
+
+    Timer {
+        id: adjuster
+        interval: 200
+        onTriggered: flickable.adjust()
+    }
 
     Component.onCompleted: {
+        Qt.inputMethod.visibleChanged.connect(adjuster.restart)
+
         var xhr = new XMLHttpRequest();
         let conf = "file:" + (Qt.application.arguments.slice(1).find(arg => !arg.startsWith("--")) || "settings.json");
         console.log("Loading configuration from '" + conf + "'");
@@ -67,28 +145,6 @@ Window {
         }
 
         xhr.send();
-    }
-
-    WebEngineView {
-        id: webView
-
-        url: "http://www.ossystems.com.br"
-
-        anchors.fill: parent
-        visible: false
-
-        property bool disableContextMenu: false
-
-        onLoadingChanged: {
-            if (loadRequest.status === WebEngineLoadRequest.LoadSucceededStatus) {
-                webView.visible = true;
-                splash.visible = false;
-            }
-        }
-
-        onContextMenuRequested: {
-            request.accepted = disableContextMenu;
-        }
     }
 
     Image {
