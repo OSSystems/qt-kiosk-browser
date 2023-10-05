@@ -6,17 +6,19 @@
  * SPDX-License-Identifier:     GPL-3.0
  */
 
-import QtQuick 2.0
-import QtQuick.Window 2.1
-import QtWebEngine 1.4
-import QtQuick.VirtualKeyboard 2.1
+import QtQuick 2.15
+import QtQuick.Window 2.15
+
+import QtWebEngine 1.7
+import QtQuick.VirtualKeyboard 2.2
+import QtQuick.VirtualKeyboard.Settings 2.2
 
 import Browser 1.0
 
 Window {
     id: window
+    visibility: "FullScreen"
 
-    visibility: Window.FullScreen
     visible: true
     color: "black"
   
@@ -43,8 +45,8 @@ Window {
 
             property bool disableContextMenu: false
 
-            onLoadingChanged: {
-                if (loadRequest.status === WebEngineLoadRequest.LoadSucceededStatus) {
+            onLoadingChanged: function(loadRequest) {
+                if (loadRequest.status == WebEngineView.LoadSucceededStatus) {
                     webView.visible = true;
                     splash.visible = false;
                 }
