@@ -6,20 +6,26 @@
  * SPDX-License-Identifier:     GPL-3.0
  */
 
-#include <QApplication>
-#include <QtWebEngine>
+
+#include <QtQml/qqml.h>
+#include <QtWebEngineQuick/qtwebenginequickglobal.h>
+#include <QtQml/QQmlApplicationEngine>
+#include <QtQml/QQmlContext>
+#include <QtGui/QGuiApplication>
 
 #include "inputeventhandler.hpp"
 #include "browser.hpp"
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication::setApplicationName("QT kiosk browser");
+
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
+    qputenv("QML_XHR_ALLOW_FILE_READ", QByteArray("1"));
+    
+    QtWebEngineQuick::initialize();
 
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
-
-    QtWebEngine::initialize();
 
     qmlRegisterSingletonType<InputEventHandler>("Browser", 1, 0, "Browser", [](QQmlEngine *, QJSEngine *) -> QObject * {
         return new Browser();
