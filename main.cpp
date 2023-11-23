@@ -8,6 +8,7 @@
 
 #include <QApplication>
 #include <QtWebEngine>
+#include <QNetworkProxyFactory>
 
 #include "inputeventhandler.hpp"
 #include "browser.hpp"
@@ -18,6 +19,8 @@ int main(int argc, char *argv[])
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
+
+    QNetworkProxyFactory::setUseSystemConfiguration(true);
 
     QtWebEngine::initialize();
 

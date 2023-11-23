@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick core gui webengine webenginewidgets
+QT += qml quick core gui webengine webenginewidgets network
 
 CONFIG += c++11
 
