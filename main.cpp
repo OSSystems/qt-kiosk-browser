@@ -12,6 +12,7 @@
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
 #include <QtGui/QGuiApplication>
+#include <QNetworkProxyFactory>
 
 #include "inputeventhandler.hpp"
 #include "browser.hpp"
@@ -22,6 +23,8 @@ int main(int argc, char *argv[])
 
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
     qputenv("QML_XHR_ALLOW_FILE_READ", QByteArray("1"));
+
+    QNetworkProxyFactory::setUseSystemConfiguration(true);
     
     QtWebEngineQuick::initialize();
 
