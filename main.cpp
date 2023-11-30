@@ -10,6 +10,7 @@
 #include <QtWebEngine>
 #include <QNetworkProxyFactory>
 
+#include "proxyhandler.hpp"
 #include "inputeventhandler.hpp"
 #include "browser.hpp"
 
@@ -20,13 +21,14 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
-    QNetworkProxyFactory::setUseSystemConfiguration(true);
+    ProxyHandler proxyHandler;
+    proxyHandler.useSystemProxy();
+    proxyHandler.printCurrentProxySettings();
 
     QtWebEngine::initialize();
 
-    qmlRegisterSingletonType<InputEventHandler>("Browser", 1, 0, "Browser", [](QQmlEngine *, QJSEngine *) -> QObject * {
-        return new Browser();
-    });
+    qmlRegisterSingletonType<InputEventHandler>("Browser", 1, 0, "Browser", [](QQmlEngine *, QJSEngine *) -> QObject *
+                                                { return new Browser(); });
     qmlRegisterType<InputEventHandler>("Browser", 1, 0, "InputEventHandler");
 
     QQmlApplicationEngine engine;
