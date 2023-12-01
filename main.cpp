@@ -14,6 +14,7 @@
 #include <QtGui/QGuiApplication>
 #include <QNetworkProxyFactory>
 
+#include "proxyhandler.hpp"
 #include "inputeventhandler.hpp"
 #include "browser.hpp"
 
@@ -23,12 +24,14 @@ int main(int argc, char *argv[])
 
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
     qputenv("QML_XHR_ALLOW_FILE_READ", QByteArray("1"));
-
-    QNetworkProxyFactory::setUseSystemConfiguration(true);
     
     QtWebEngineQuick::initialize();
 
     QGuiApplication app(argc, argv);
+
+    ProxyHandler proxyHandler;
+    proxyHandler.useSystemProxy();
+    proxyHandler.printCurrentProxySettings();
 
     qmlRegisterSingletonType<InputEventHandler>("Browser", 1, 0, "Browser", [](QQmlEngine *, QJSEngine *) -> QObject * {
         return new Browser();
